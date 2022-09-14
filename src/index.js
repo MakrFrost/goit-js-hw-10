@@ -21,9 +21,11 @@ inputSearch.addEventListener(
     console.log(searchingLetters);
 
     //? Импорт фетча
-    fetchCountries(searchingLetters).then(data => {
-      makeCountryList(data);
-    });
+    fetchCountries(searchingLetters)
+      .then(data => {
+        makeCountryList(data);
+      })
+      .catch(error => console.log(error));
   }, DEBOUNCE_DELAY)
 );
 
