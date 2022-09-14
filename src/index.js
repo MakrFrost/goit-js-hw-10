@@ -17,11 +17,11 @@ inputSearch.addEventListener(
     event.preventDefault();
 
     //? Инпут
-    const searchingLetters = event.target.value.trim();
+    let searchingLetters = inputSearch.value.trim();
     console.log(searchingLetters);
 
     if (searchingLetters === '') {
-      clearCountries(makeCountryList, makeCountryInfo);
+      clearCountries();
       return;
     }
 
@@ -30,50 +30,45 @@ inputSearch.addEventListener(
       .then(data => {
         console.log(data);
         if (data.length === 1) {
-          Notiflix.Notify.success('We Found Entered Country!');
-          clearCountries(makeCountryList, makeCountryInfo);
+          Notiflix.Notify.success(
+            `We found entered country! ${searchingLetters}`
+          );
+          clearCountries();
           makeCountryInfo(data);
         } else if (data.length > 1 && data.length <= 8) {
           Notiflix.Notify.info('We found too much counties');
-          clearCountries(makeCountryList, makeCountryInfo);
           makeCountryList(data);
         } else {
           Notiflix.Notify.info(
             'Too many matches found. Please enter a more specific name.'
           );
-          clearCountries(makeCountryList, makeCountryInfo);
         }
       })
       .catch(error => {
         error,
           Notiflix.Notify.failure('Oops, there is no country with that name');
-        clearCountries(makeCountryList, makeCountryInfo);
       });
   }, DEBOUNCE_DELAY)
 );
 
 //! Ф-я очистки полей стран
-function clearCountries(x, y) {
-  x.innerHTML = '';
-  y.innerHTML = '';
+function clearCountries() {
+  countryInfoEl.innerHTML = '';
+  countryListEl.innerHTML = '';
 }
 
 //! Ф-я создания разметки для стран
 function makeCountryInfo(countries) {
   const country = countries[0];
   const aboutCountry = `<div class="country-info__box" alt="flag">
-            <img src=${country.flags.png} width="50">
+            <img src=${country.flags.png} width="80">
             <span class="country-info__name">${country.name.official}</span>
             </div>
-            <p class="country-text"><span class="country-info--accent">Capital:</span> ${
-              country.capital
-            }</p>
-            <p class="country-text"><span class="country-info--accent">Population:</span> ${
-              country.population
-            }</p>
-            <p class="country-text"><span class="country-info--accent">Languages:</span> ${Object.values(
-              country.languages
-            ).join(', ')}</p>`;
+            <p class="country-text"><span class="country-info--accent">Capital:</span> ${country.capital}</p>
+            <p class="country-text"><span class="country-info--accent">Population:</span> ${country.population}</p>
+            <p class="country-text"><span class="country-info--accent">Languages:</span>${country.languages}</p>`.join(
+    ', '
+  );
 
   countryInfoEl.insertAdjacentHTML('afterbegin', aboutCountry);
   console.log('выполнилась функция makeCountryInfo');
