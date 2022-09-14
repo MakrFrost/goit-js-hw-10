@@ -20,17 +20,35 @@ inputSearch.addEventListener(
     const searchingLetters = event.target.value.trim();
     console.log(searchingLetters);
 
+    if (searchingLetters === '') {
+      clearCountries(makeCountryList, makeCountryInfo);
+      return;
+    }
+
     //? Импорт фетча
     fetchCountries(searchingLetters)
       .then(data => {
-        if (data.length === 0) {
+        console.log(data);
+        if (data.length === 1) {
+          Notiflix.Notify.success('We Found Entered Country!');
           clearCountries(makeCountryList, makeCountryInfo);
-          return;
-        } else if (data.length === 1) {
+          makeCountryInfo(data);
+        } else if (data.length > 1 && data.length <= 8) {
+          Notiflix.Notify.info('We found too much counties');
+          clearCountries(makeCountryList, makeCountryInfo);
           makeCountryList(data);
+        } else {
+          Notiflix.Notify.info(
+            'Too many matches found. Please enter a more specific name.'
+          );
+          clearCountries(makeCountryList, makeCountryInfo);
         }
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        error,
+          Notiflix.Notify.failure('Oops, there is no country with that name');
+        clearCountries(makeCountryList, makeCountryInfo);
+      });
   }, DEBOUNCE_DELAY)
 );
 
@@ -48,9 +66,9 @@ function makeCountryList(countries) {
   <p class="country-list__name">${country.name.official}</p>
 </li>`;
   });
-  for (const country of countryList) {
+  countryList.forEach(country => {
     countryListEl.insertAdjacentHTML('afterbegin', country);
-  }
+  });
 }
 
 //! Ф-я создания разметки для стран
@@ -70,5 +88,5 @@ function makeCountryInfo(countries) {
               country.languages
             ).join(', ')}</p>`;
 
-  countryInfoElem.insertAdjacentHTML('afterbegin', aboutCountry);
+  countryInfoEl.insertAdjacentHTML('afterbegin', aboutCountry);
 }
