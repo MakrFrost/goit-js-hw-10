@@ -1,5 +1,5 @@
 import './css/styles.css';
-import fetchAPI from './fetchCountries';
+import { fetchCountries } from './fetchCountries';
 const debounce = require('lodash.debounce');
 // import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import Notiflix from 'notiflix';
@@ -22,7 +22,7 @@ inputSearch.addEventListener(
     console.log(searchingLetters);
 
     //? Импорт фетча
-    fetchAPI.fetchCountries(`${searchingLetters}`).then(data => {
+    fetchCountries(`${searchingLetters}`).then(data => {
       makeCountryList(data);
     }, DEBOUNCE_DELAY);
   })
