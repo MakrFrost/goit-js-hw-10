@@ -1,7 +1,6 @@
 import './css/styles.css';
 import { fetchCountries } from './fetchCountries';
 const debounce = require('lodash.debounce');
-// import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import Notiflix from 'notiflix';
 
 const DEBOUNCE_DELAY = 300;
@@ -18,14 +17,14 @@ inputSearch.addEventListener(
     event.preventDefault();
 
     //? Инпут
-    const searchingLetters = event.target.value;
+    const searchingLetters = event.target.value.trim();
     console.log(searchingLetters);
 
     //? Импорт фетча
-    fetchCountries(`${searchingLetters}`).then(data => {
+    fetchCountries(searchingLetters).then(data => {
       makeCountryList(data);
-    }, DEBOUNCE_DELAY);
-  })
+    });
+  }, DEBOUNCE_DELAY)
 );
 
 //! Ф-я создания разметки

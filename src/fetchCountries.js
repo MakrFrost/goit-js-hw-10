@@ -5,10 +5,7 @@ function fetchCountries(nameCountry) {
   fetch(
     `https://restcountries.com/v3.1/name/${nameCountry}?fields=name,capital,population,flags,languages`
   ).then(response => {
-    // fetch(`${url}${nameCountry}${options}`).then(response => {
-    //restcountries.com/v3.1/name/${name}?fields=name,capital,population,flags,languages
-
-    https: if (!response.ok) {
+    if (!response.ok) {
       throw new Error(response.status);
     }
     return response.json();
@@ -16,3 +13,6 @@ function fetchCountries(nameCountry) {
 }
 
 export { fetchCountries };
+
+// fetch(`${url}${nameCountry}${options}`).then(response => {
+//https://restcountries.com/v3.1/name/${name}?fields=name,capital,population,flags,languages
