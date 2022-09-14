@@ -58,19 +58,6 @@ function clearCountries(x, y) {
   y.innerHTML = '';
 }
 
-//! Ф-я создания разметки
-function makeCountryList(countries) {
-  const countryList = countries.map(country => {
-    return `<li class="country-list__item">
-  <img src="${country.flags.png}" width="100" />
-  <p class="country-list__name">${country.name.official}</p>
-</li>`;
-  });
-  countryList.forEach(country => {
-    countryListEl.insertAdjacentHTML('afterbegin', country);
-  });
-}
-
 //! Ф-я создания разметки для стран
 function makeCountryInfo(countries) {
   const country = countries[0];
@@ -89,4 +76,19 @@ function makeCountryInfo(countries) {
             ).join(', ')}</p>`;
 
   countryInfoEl.insertAdjacentHTML('afterbegin', aboutCountry);
+  console.log('выполнилась функция makeCountryInfo');
+}
+
+//! Ф-я создания разметки
+function makeCountryList(countries) {
+  const countryList = countries.map(country => {
+    return `<li class="country-list__item">
+  <img src="${country.flags.png}" width="100" />
+  <p class="country-list__name">${country.name.official}</p>
+</li>`;
+  });
+  countryList.forEach(countryEl => {
+    countryListEl.insertAdjacentHTML('afterbegin', countryEl);
+  });
+  console.log('выполнилась функция makeCountryList');
 }
