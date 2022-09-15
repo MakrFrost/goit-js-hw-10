@@ -6,71 +6,67 @@ import Notiflix from 'notiflix';
 const DEBOUNCE_DELAY = 300;
 
 const inputSearch = document.querySelector('input#search-box');
-const countryListEl = document.querySelector('country-list');
-const countryInfoEl = document.querySelector('country-info');
+const countryListEl = document.querySelector('.country-list');
+const countryInfoEl = document.querySelector('.country-info');
 
 //? Поле поиска
 inputSearch.addEventListener(
   'input',
   //? Задержка в 300мс
-  debounce(event => {
-    event.preventDefault();
-
+  debounce(e => {
     //? Инпут
     let searchingLetters = inputSearch.value.trim();
-    console.log(searchingLetters);
 
-    if (searchingLetters === '') {
-      clearCountries();
+    if (searchingLetters.length === 0) {
+      clearCountries(countryInfoEl, countryListEl);
       return;
     }
 
     //? Импорт фетча
     fetchCountries(searchingLetters)
       .then(data => {
-        console.log(data);
         if (data.length === 1) {
-          Notiflix.Notify.success(
-            `We found entered country! ${searchingLetters}`
-          );
-          clearCountries();
+          Notiflix.Notify.info(`We found entered country! ${searchingLetters}`);
+          clearCountries(countryInfoEl, countryListEl);
           makeCountryInfo(data);
-        } else if (data.length > 1 && data.length <= 8) {
-          Notiflix.Notify.info('We found too much counties');
+        } else if (data.length > 1 && data.length <= 9) {
+          Notiflix.Notify.info('We found too much countries!');
+          clearCountries(countryInfoEl, countryListEl);
           makeCountryList(data);
         } else {
           Notiflix.Notify.info(
             'Too many matches found. Please enter a more specific name.'
           );
+          clearCountries(countryInfoEl, countryListEl);
         }
       })
       .catch(error => {
-        error,
-          Notiflix.Notify.failure('Oops, there is no country with that name');
+        Notiflix.Notify.failure('Oops, there is no country with that name');
+        clearCountries(countryInfoEl, countryListEl);
       });
   }, DEBOUNCE_DELAY)
 );
 
 //! Ф-я очистки полей стран
-function clearCountries() {
-  countryInfoEl.innerHTML = '';
-  countryListEl.innerHTML = '';
+function clearCountries(x, y) {
+  x.innerHTML = '';
+  y.innerHTML = '';
 }
 
 //! Ф-я создания разметки для стран
 function makeCountryInfo(countries) {
   const country = countries[0];
-  const aboutCountry = `<div class="country-info__box" alt="flag">
-            <img src=${country.flags.png} width="80">
-            <span class="country-info__name">${country.name.official}</span>
+  const aboutCountry = `<div alt="flag">
+            <img src=${country.flags.svg} width="100">
+            <span>${country.name.official}</span>
             </div>
-            <p class="country-text"><span class="country-info--accent">Capital:</span> ${country.capital}</p>
-            <p class="country-text"><span class="country-info--accent">Population:</span> ${country.population}</p>
-            <p class="country-text"><span class="country-info--accent">Languages:</span>${country.languages}</p>`.join(
-    ', '
-  );
+            <p><span>Capital:</span> ${country.capital}</p>
+            <p><span>Population:</span> ${country.population}</p>
+            <p><span>Languages:</span> ${Object.values(country.languages).join(
+              ', '
+            )}</p>`;
 
-  countryInfoEl.insertAdjacentHTML('afterbegin', aboutCountry);
+  countryInfoEl.insertAdjacentHTML('beforeend', aboutCountry);
   console.log('выполнилась функция makeCountryInfo');
 }
 
@@ -78,12 +74,12 @@ function makeCountryInfo(countries) {
 function makeCountryList(countries) {
   const countryList = countries.map(country => {
     return `<li class="country-list__item">
-  <img src="${country.flags.png}" width="100" />
-  <p class="country-list__name">${country.name.official}</p>
-</li>`;
+            <img src=${country.flags.png} width="80" alt="flag">
+            <span>${country.name.official}</span>
+        </li>`;
   });
-  countryList.forEach(countryEl => {
-    countryListEl.insertAdjacentHTML('afterbegin', countryEl);
+  countryList.forEach(markupCountry => {
+    countryListEl.insertAdjacentHTML('beforeend', markupCountry);
+    console.log('выполнилась функция makeCountryList');
   });
-  console.log('выполнилась функция makeCountryList');
 }
