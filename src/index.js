@@ -67,7 +67,7 @@ function makeCountryInfo(countries) {
             )}</p>`;
 
   countryInfoEl.insertAdjacentHTML('beforeend', aboutCountry);
-  console.log('выполнилась функция makeCountryInfo');
+  console.log('выполнилась функция makeCountryInfo для страны');
 }
 
 //! Ф-я создания разметки
@@ -80,6 +80,6 @@ function makeCountryList(countries) {
   });
   countryList.forEach(markupCountry => {
     countryListEl.insertAdjacentHTML('beforeend', markupCountry);
-    console.log('выполнилась функция makeCountryList');
+    console.log('выполнилась функция makeCountryList для стран');
   });
 }
